@@ -35,55 +35,53 @@ public class Controller {
     /**
      * getItem
      *
-     * @param name
+     * @param name - item name
      * @return item matching name or null if not found
      */
     @GetMapping("/item/{name}")
     public Item getItem(@PathVariable String name) {
         try {
             return Store.getItem(name, true); // mark item as viewed
-        } catch (Exception e) {
+        } catch (Store.ItemNotFoundException e) {
         }
         return null;
     }
 
     /**
-     * getUsers
+     * getUsers - for debugging only
      *
      * @return all users
-     */
     @GetMapping("/users")
     public User[] getUsers() {
         return Store.getUsers();
     }
+     */
 
     /**
-     * getViews
+     * getViews - for debugging only
      *
      * @return all views
-     */
     @GetMapping("/views")
     public HashMap<String, ArrayList<Date>> getViews() {
         return Store.getViews();
     }
+     */
 
     /**
      * buyItem
      *
-     * @param name
-     * @param quantity
-     * @param login
-     * @param password
-     * @return item matching name or null if not found
+     * @param name - item name
+     * @param quantity - number of this item to buy
+     * @param login - authentication
+     * @param password - authentication
+     * @return true if transaction successful; false if item or user not found or insufficient stock
      */
     @PostMapping("/item/{name}/{quantity}")
     public boolean postItem(@PathVariable String name, @PathVariable Integer quantity, @RequestParam String login, @RequestParam String password) {
-        boolean b = false;
+        boolean b;
         try {
             b = Store.buyItem(name, quantity, login, password);
-        } catch (Store.ItemNotFoundException infe) {
-            b = false;
-        } catch (Store.UserNotFoundException unfe) {
+        } catch (Store.ItemNotFoundException | Store.UserNotFoundException infe) {
             b = false;
         }
         return b;

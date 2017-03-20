@@ -70,7 +70,7 @@ public class Store {
      * @param quantity - # of items to buy
      * @param login - authentication
      * @param password - authentication
-     * @return true if transaction completed
+     * @return true if transaction completed; false if item/user not found or insufficient stock
      * @throws ItemNotFoundException
      * @throws UserNotFoundException
      */
