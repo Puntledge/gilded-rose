@@ -74,7 +74,7 @@ Returns JSON array of objects representing all the store items:
     }
 ]
 
-## GET http://localhost:8080/item/_name_
+## GET /item/_name_
 
 Returns JSON object representing the store item matching _name_
 
@@ -84,7 +84,7 @@ Returns JSON object representing the store item matching _name_
     "price": 15
 }
 
-## POST http://localhost:8080/item/_name_/_quantity_?login=_login_&password=_password_
+## POST /item/_name_/_quantity_?login=_login_&password=_password_
 
 Buys _quantity_ items matching _name_ using credentials _login_ and _password_
 
