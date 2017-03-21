@@ -9,7 +9,7 @@ If an item has been viewed more than 10 times in the last hour, its price goes u
 If the number of views in the last hour drops below 10, the original price is restored.
 Buying an item requires authentication and reduces its stock by the quantity purchased.
 Since only one REST endpoint currently needs to be secured, a simple login/password lookup mechanism is used for that endpoint.
-As the application grows, proper Spring-based authentication will be added.
+(In the next iteration, Spring-based authentication will be implemented by extending CrudRepository to look up users, extending GlobalAuthenticationConfigurerAdapter to return a UserDetailsService that uses our repository, and extending WebSecurityConfigurerAdapter to provide per-URL authentication.)
 An item can only be purchased if there is sufficient stock.
 Once the stock of an item drops to 0 it can no longer be purchased.
 
