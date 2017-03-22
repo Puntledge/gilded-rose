@@ -8,8 +8,6 @@ Retrieving one item is considered a "view" of the item which is is timestamped.
 If an item has been viewed more than 10 times in the last hour, its price goes up by 10%.
 If the number of views in the last hour drops below 10, the original price is restored.
 Buying an item requires authentication and reduces its stock by the quantity purchased.
-Since only one REST endpoint currently needs to be secured, a simple login/password lookup mechanism is used for that endpoint.
-(In the next iteration, Spring-based authentication will be implemented by extending CrudRepository to look up users, extending GlobalAuthenticationConfigurerAdapter to return a UserDetailsService that uses our repository, and extending WebSecurityConfigurerAdapter to provide per-URL authentication.)
 An item can only be purchased if there is sufficient stock.
 Once the stock of an item drops to 0 it can no longer be purchased.
 
@@ -44,7 +42,7 @@ The Gilded Rose application uses Spring Boot to launch a Tomcat web application 
 
 ## GET http:/localhost:8080/items
 
-Returns JSON array of objects representing all the store items:
+Returns JSON array of objects representing all the store items
 
 [
     {
@@ -76,7 +74,7 @@ Returns JSON array of objects representing all the store items:
 
 ## GET /item/_name_
 
-Returns JSON object representing the store item matching _name_
+Returns JSON object representing the store item matching _name_ or status 500 if item not found
 
 {
     "name": "GR1",
@@ -84,11 +82,11 @@ Returns JSON object representing the store item matching _name_
     "price": 15
 }
 
-## POST /item/_name_/_quantity_?login=_login_&password=_password_
+## POST /item/_name_/_quantity_
 
-Buys _quantity_ items matching _name_ using credentials _login_ and _password_
+Buys _quantity_ items matching _name_ (requires credentials)
 
-Returns true if transaction successful; false if user not found, item not found, or insufficient stock
+Returns JSON object representing the store item matching _name_, status 500 if item not found or item out of stock, or status 403 if authentication failed
 
 # Question? Comments?
 
