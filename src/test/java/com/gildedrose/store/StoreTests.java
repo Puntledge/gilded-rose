@@ -15,26 +15,18 @@ import org.junit.Test;
 public class StoreTests {
 
     @Test
-    public void testAuthenticateUsers() throws Exception {
-        for (User user : Store.getUsers()) {
-            boolean b = Store.authenticateUser(user.getLogin(), user.getPassword());
-            assert (b);
-        }
+    public void testBuyOneItem() throws Exception {
+        String name = "GR1";
+        assert (Store.buyItem(name, 1) != null);
     }
 
     @Test
-    public void testBuyItemOnce() throws Exception {
-        String name = "GR1", login = "abc", password = "qwerty";
-        assert(Store.buyItem(name, 1, login, password));
-    }
-
-    @Test
-    public void testBuyItemFiveTimes() throws Exception {
-        String name = "GR1", login = "abc", password = "qwerty";
+    public void testBuyFiveOfAnItem() throws Exception {
+        String name = "GR1";
         Integer quantity = 5;
         Integer before = Store.getQuantityInStock(name);
         assert (before > 0);
-        assert(Store.buyItem(name, quantity, login, password));
+        assert (Store.buyItem(name, quantity) != null);
         Integer after = Store.getQuantityInStock(name);
         assert (after == (before - quantity));
     }
@@ -66,6 +58,6 @@ public class StoreTests {
                 price1 = item.getPrice();
             }
         }
-        assert (price1 != price2);
+        assert (price1 < price2);
     }
 }

@@ -18,10 +18,9 @@ public class Store {
 
     public static class ItemNotFoundException extends Exception {
 
-    }
-
-    public static class UserNotFoundException extends Exception {
-
+        public ItemNotFoundException(String message) {
+            super(message);
+        }
     }
 
     // Simulated DB with 6 items
@@ -34,13 +33,6 @@ public class Store {
         new Item("GR6", "Item Six", 65)
     };
 
-    // Simulated DB with 3 users
-    private static final User[] USERS = new User[]{
-        new User("abc", "qwerty"),
-        new User("def", "asdfgh"),
-        new User("ghi", "zxcvbn")
-    };
-
     // Map to track item stock
     private static final HashMap<String, Integer> STOCK = new HashMap<String, Integer>();
 
@@ -48,42 +40,25 @@ public class Store {
     private static final HashMap<String, ArrayList<Date>> VIEWS = new HashMap<String, ArrayList<Date>>();
 
     /**
-     * authenticateUser
-     *
-     * @param login
-     * @param password
-     * @return true if authentication successful
-     * @throws UserNotFoundException
-     */
-    public static boolean authenticateUser(String login, String password) throws UserNotFoundException {
-        User user = getUser(login);
-        if (user == null) {
-            return false;
-        }
-        return user.getPassword().compareTo(password) == 0;
-    }
-
-    /**
      * buyItem
      *
      * @param name - item name
-     * @param quantity - # of items to buy
-     * @param login - authentication
-     * @param password - authentication
-     * @return true if transaction completed; false if item/user not found or insufficient stock
+     * @param quantity - how many of the item to buy
+     * @return item matching name
      * @throws ItemNotFoundException
-     * @throws UserNotFoundException
      */
-    public static boolean buyItem(String name, Integer quantity, String login, String password) throws ItemNotFoundException, UserNotFoundException {
-        if (authenticateUser(login, password) == false) {
-            return false;
+    public static Item buyItem(String name, Integer quantity) throws ItemNotFoundException {
+        for (Item item : getItems()) {
+            if (item.getName().compareTo(name) == 0) {
+                Integer available = getQuantityInStock(name);
+                if (available < quantity) {
+                    throw new ItemNotFoundException("Item " + name + " out of stock");
+                }
+                updateQuantityInStock(name, available - quantity);
+                return item;
+            }
         }
-        Integer quantityInStock = getQuantityInStock(name);
-        if (quantityInStock < quantity) {
-            return false;
-        }
-        updateQuantityInStock(name, quantityInStock - quantity);
-        return true;
+        throw new ItemNotFoundException("Item " + name + " not found");
     }
 
     /**
@@ -134,7 +109,7 @@ public class Store {
                 return item;
             }
         }
-        throw new ItemNotFoundException();
+        throw new ItemNotFoundException("Item " + name + " not found");
     }
 
     /**
@@ -159,31 +134,6 @@ public class Store {
             STOCK.put(name, quantity);
         }
         return quantity;
-    }
-
-    /**
-     * getUser
-     *
-     * @param login
-     * @return user matching login
-     * @throws UserNotFoundException
-     */
-    public static User getUser(String login) throws UserNotFoundException {
-        for (User user : getUsers()) {
-            if (user.getLogin().compareTo(login) == 0) {
-                return user;
-            }
-        }
-        throw new UserNotFoundException();
-    }
-
-    /**
-     * getUsers
-     *
-     * @return all users
-     */
-    public static User[] getUsers() {
-        return USERS;
     }
 
     /**
